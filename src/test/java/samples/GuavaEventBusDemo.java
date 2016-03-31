@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -14,7 +13,7 @@ import static org.mockito.Mockito.*;
  */
 public class GuavaEventBusDemo {
 
-
+    //Note: EventBus can't use Mock's as subscribers, because they lack @Subscribe annotated methods!
     private static EventBus eventBus;
 
     interface EventA {}
@@ -45,7 +44,7 @@ public class GuavaEventBusDemo {
     }
 
     @Test
-    public void shouldSimplyRouteAnEventToASubscriber(){
+    public void shouldRouteOneEventToOneSubscriberWithoutMockito() {
         //Arrange
         Subscriber subscriber = new Subscriber();
         eventBus.register(subscriber);
@@ -61,9 +60,9 @@ public class GuavaEventBusDemo {
     }
 
     @Test
-    public void shouldRouteEventsAppropriately() {
+    public void shouldRouteMultipleEventsToOneSubscriber() {
         //Arrange
-        Subscriber subscriber = spy(new Subscriber()); //Guava didn't like Mock's, because they don't have @Subscribe, so used a spy.
+        Subscriber subscriber = spy(new Subscriber());
         EventA eventA = mock(EventA.class);
         EventB eventB = mock(EventB.class);
         eventBus.register(subscriber);
@@ -79,7 +78,7 @@ public class GuavaEventBusDemo {
     }
 
     @Test
-    public void shouldRouteEventToMultipleSubscibers(){
+    public void shouldRouteOneEventToMultipleSubscribers() {
         //Arrange
         Subscriber subscriberA = spy(new Subscriber());
         Subscriber subscriberB = spy(new Subscriber());
